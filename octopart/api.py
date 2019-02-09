@@ -165,6 +165,16 @@ def search(query: str,
     return models.PartsSearchResult(response)
 
 
+def part(uid: str,
+         includes: t.Optional[t.List[str]] = None,
+         hide: t.Optional[t.List[str]] = None,
+         show: t.Optional[t.List[str]] = None,
+         ) -> models.Part:
+    client = OctopartClient()
+    part_res = client.part(uid, includes=includes, hide=hide, show=show)
+    return models.Part(part_res)
+
+
 def get_brand(uid: str) -> models.Brand:
     client = OctopartClient()
     brand_dict = client.get_brand(uid)

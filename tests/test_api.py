@@ -185,6 +185,35 @@ class PartsTests(TestCase):
         }
 
     @responses.activate
+    def test_parts_part(self):
+        """
+        Tests that `part` returns part that match the uid.
+        """
+        # Mock out all calls to search endpoint.
+        url_regex = re.compile(r'https://octopart\.com/api/v3/parts/.*')
+        responses.add(
+            responses.GET,
+            url_regex,
+            json=fixtures.parts_part_response,
+            status=200,
+            content_type='application/json'
+        )
+
+        part = api.part("eddc25bd5de8321b")
+
+        assert isinstance(part, models.Part)
+        assert part.uid == "eddc25bd5de8321b"
+        assert part.mpn == 'FLUKE-424D'
+        assert part.manufacturer == 'Fluke'
+
+        assert len(part.offers) == 1
+        offer = part.offers[0]
+        assert isinstance(offer, models.PartOffer)
+        assert offer.prices == {
+            'USD': {1: 429.99000}
+        }
+
+    @responses.activate
     def test_match_parts_by_seller(self):
         """
         Tests that including specific sellers in `match` call

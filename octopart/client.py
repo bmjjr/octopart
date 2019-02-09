@@ -3,6 +3,7 @@ import json
 import logging
 import os
 import typing as t
+import re
 
 import requests
 
@@ -197,6 +198,44 @@ class OctopartClient(object):
             params['hide[]'] = hide
 
         return self._request('/parts/search', params=params)
+
+    def part(self,
+             uid: str,  # maps to "uid" parameter in Octopart API
+             includes: t.Optional[t.List[str]] = None,
+             hide: t.Optional[t.List[str]] = None,
+             show: t.Optional[t.List[str]] = None,
+             ) -> dict:
+        """
+        Query part by unique ID, using more fields and filter options than 'match'.
+
+        This calls the /parts/search endpoint of the Octopart API:
+        https://octopart.com/api/docs/v3/rest-api#endpoints-parts-search
+
+        Args:
+            uid (str): unique 64-bit Octopart ID
+
+        Kwargs:
+            includes, hide, show: Same as `match()`.
+
+        Returns:
+            dict. See `models.Part` for exact fields.
+        """
+
+        if not re.match('^[a-f0-9]{16}$', uid):
+            raise OctopartError('Wrong UID given, please enter a 64-bit unique Octopart ID')
+
+        params = {}
+
+        # since there is a maximum URL length, only set options parameters in
+        # the URL when using the non-default value
+        if includes:
+            params['include[]'] = includes
+        if show:
+            params['show[]'] = show
+        if hide:
+            params['hide[]'] = hide
+
+        return self._request(f'/parts/{uid}', params=params)
 
     def get_brand(self, uid: str) -> dict:
         """Retrieve brand data by UID

@@ -345,6 +345,128 @@ class PartSearchTests(TestCase):
             assert 'include%5B%5D=imagesets' in called_url
 
 
+class PartTests(TestCase):
+    """Tests for the client's part() method"""
+    def setUp(self):
+        self.client = OctopartClient(api_key='TEST_TOKEN')
+
+    @patch('requests.get')
+    def test_malformed_uid(self, mock_get):
+        with pytest.raises(OctopartError):
+            self.client.part("this is not a 64-bit uid")
+        # the exception should prevent any queries from being made
+        assert not mock_get.called
+
+    def test_hide_directive(self):
+        response_body = {
+            "__class__": "Part",
+            "brand": {
+                "__class__": "Brand",
+                "homepage_url": "http://www.ohmite.com/",
+                "name": "Ohmite",
+                "uid": "574996437b3e808e"
+            },
+            "manufacturer": {
+                "__class__": "Manufacturer",
+                "homepage_url": "http://www.ohmite.com/",
+                "name": "Ohmite",
+                "uid": "5da998a375de8e6e"
+            },
+            "mpn": "D25K10KE",
+            "octopart_url": "https://octopart.com/d25k10ke-ohmite-150892",  # noqa
+            "redirected_uids": [],
+            "uid": "3cc3f5cb54c9e304"
+        }
+
+        with octopart_mock_response(response_body) as response:
+            result = self.client.part("3cc3f5cb54c9e304", hide=['offers'])
+            assert result['mpn'] == "D25K10KE"
+            called_url = request_url_from_request_mock(response)
+            assert '/parts/3cc3f5cb54c9e304' in called_url
+            assert 'hide%5B%5D=offers' in called_url
+
+    def test_show_directive(self):
+        response_body = {
+            "offers": [
+                {
+                    "__class__": "PartOffer",
+                    "eligible_region": "US",
+                    "factory_lead_days": None,
+                    "factory_order_multiple": None,
+                    "in_stock_quantity": 29,
+                    "is_authorized": True,
+                    "is_realtime": False,
+                    "last_updated": "2018-04-30T17:53:11Z",
+                    "moq": 1,
+                    "multipack_quantity": "1",
+                    "octopart_rfq_url": None,
+                    "on_order_eta": None,
+                    "on_order_quantity": None,
+                    "order_multiple": None,
+                    "packaging": None,
+                    "prices": {
+                        "USD": [
+                            [1, "13.65000"],
+                            [10, "12.40000"],
+                            [25, "11.17000"],
+                            [50, "10.56000"],
+                            [100, "10.44000"],
+                            [250, "8.92000"],
+                            [500, "8.75000"]
+                        ]
+                    },
+                    "product_url": "https://octopart.com/click/track?ak=a8cfd5a0&sig=08c4b0d&sid=2402&ppid=150892&vpid=3009946&ct=offers",  # noqa
+                    "seller": {
+                        "__class__": "Seller",
+                        "display_flag": "US",
+                        "has_ecommerce": True,
+                        "homepage_url": "http://www.newark.com",
+                        "id": "2402",
+                        "name": "Newark",
+                        "uid": "d294179ef2900153"
+                    },
+                    "sku": "64K4273"
+                }
+            ]
+        }
+
+        with octopart_mock_response(response_body) as response:
+            result = self.client.part("3cc3f5cb54c9e304", show=['offers'])
+            [offer] = result['offers']
+            assert offer['in_stock_quantity'] == 29
+            called_url = request_url_from_request_mock(response)
+            assert '/parts/3cc3f5cb54c9e304' in called_url
+            assert 'show%5B%5D=offers' in called_url
+
+    def test_include_directive(self):
+        with octopart_mock_response() as response:
+            self.client.part("3cc3f5cb54c9e304", includes=['cad_models'])
+            called_url = request_url_from_request_mock(response)
+            assert '/parts/3cc3f5cb54c9e304' in called_url
+            assert 'include%5B%5D=cad_models' in called_url
+
+    def test_no_directives(self):
+        with octopart_mock_response() as response:
+            self.client.part("3cc3f5cb54c9e304")
+            called_url = request_url_from_request_mock(response)
+            assert '/parts/3cc3f5cb54c9e304' in called_url
+            assert 'hide%5B%5D=' not in called_url
+            assert 'show%5B%5D=' not in called_url
+            assert 'include%5B%5D=' not in called_url
+
+    def test_complete_example(self):
+        with octopart_mock_response() as response:
+            self.client.part(
+                "3cc3f5cb54c9e304",
+                show=['brand.name'],
+                includes=['imagesets'],
+            )
+            called_url = request_url_from_request_mock(response)
+            assert '/parts/3cc3f5cb54c9e304' in called_url
+            assert 'show%5B%5D=brand.name' in called_url  # %5B%5D is []
+            assert 'include%5B%5D=imagesets' in called_url
+
+
 class BrandSearchTests(TestCase):
     """Tests for the client's search_brand() and get_brand() methods"""
     def setUp(self):

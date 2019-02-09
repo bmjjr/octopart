@@ -5876,3 +5876,151 @@ parts_search_response = json.loads("""{
     }
   ]
 }""")
+
+parts_part_response = json.loads("""{
+  "__class__": "Part",
+  "brand": {
+    "__class__": "Brand",
+    "homepage_url": null,
+    "name": "Fluke",
+    "uid": "78cfb9c55526af08"
+  },
+  "manufacturer": {
+    "__class__": "Manufacturer",
+    "homepage_url": null,
+    "name": "Fluke",
+    "uid": "94e351e9bd0a4724"
+  },
+  "mpn": "FLUKE-424D",
+  "octopart_url": "https://octopart.com/fluke-424d-fluke-23827794",
+  "offers": [
+    {
+      "__class__": "PartOffer",
+      "_custom": {},
+      "_naive_id": "459_614-1227-ND",
+      "eligible_region": "",
+      "factory_lead_days": 14,
+      "factory_order_multiple": null,
+      "in_stock_quantity": 1,
+      "is_authorized": true,
+      "is_realtime": false,
+      "last_updated": "2018-10-10T12:46:51Z",
+      "moq": 1,
+      "multipack_quantity": null,
+      "octopart_rfq_url": null,
+      "on_order_eta": null,
+      "on_order_quantity": null,
+      "order_multiple": null,
+      "packaging": "Bulk",
+      "prices": {
+        "USD": [
+          [
+            1,
+            "429.99000"
+          ]
+        ]
+      },
+      "product_url": "https://octopart.com/click/track?ak=69ec4b8e&sig=057d134&sid=459&ppid=23827794&vpid=61927347&ct=offers",
+      "seller": {
+        "__class__": "Seller",
+        "display_flag": "US",
+        "has_ecommerce": true,
+        "homepage_url": "http://www.digikey.com",
+        "id": "459",
+        "name": "Digi-Key",
+        "uid": "2c3be9310496fffc"
+      },
+      "sku": "614-1227-ND"
+    }
+  ],
+  "redirected_uids": [
+    "02afc8ea3f09dd68",
+    "57649f3a221d88a3",
+    "7c4eb43875f0a389"
+  ],
+  "short_description": "Fluke Laser Distance Meter Includes Compass and Pouch 80 Meters 260 Feet",
+  "specs": {
+    "packaging": {
+      "__class__": "SpecValue",
+      "attribution": {
+        "__class__": "Attribution",
+        "first_acquired": null,
+        "sources": [
+          {
+            "__class__": "Source",
+            "name": "Ciiva",
+            "uid": "8c5c4956cfa65f9b"
+          }
+        ]
+      },
+      "display_value": "Bulk",
+      "max_value": null,
+      "metadata": {
+        "__class__": "SpecMetadata",
+        "datatype": "string",
+        "key": "packaging",
+        "name": "Packaging",
+        "unit": null
+      },
+      "min_value": null,
+      "value": [
+        "Bulk"
+      ]
+    },
+    "reach_svhc_compliance": {
+      "__class__": "SpecValue",
+      "attribution": {
+        "__class__": "Attribution",
+        "first_acquired": null,
+        "sources": [
+          {
+            "__class__": "Source",
+            "name": "Farnell",
+            "uid": "58989d9272cd8b5f"
+          }
+        ]
+      },
+      "display_value": "No SVHC",
+      "max_value": null,
+      "metadata": {
+        "__class__": "SpecMetadata",
+        "datatype": "string",
+        "key": "reach_svhc_compliance",
+        "name": "REACH SVHC Compliance",
+        "unit": null
+      },
+      "min_value": null,
+      "value": [
+        "No SVHC"
+      ]
+    },
+    "rohs_status": {
+      "__class__": "SpecValue",
+      "attribution": {
+        "__class__": "Attribution",
+        "first_acquired": null,
+        "sources": [
+          {
+            "__class__": "Source",
+            "name": "Farnell",
+            "uid": "58989d9272cd8b5f"
+          }
+        ]
+      },
+      "display_value": "Not Applicable",
+      "max_value": null,
+      "metadata": {
+        "__class__": "SpecMetadata",
+        "datatype": "string",
+        "key": "rohs_status",
+        "name": "RoHS",
+        "unit": null
+      },
+      "min_value": null,
+      "value": [
+        "Not Applicable"
+      ]
+    }
+  },
+  "uid": "eddc25bd5de8321b"
+}""")

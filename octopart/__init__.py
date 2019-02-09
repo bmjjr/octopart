@@ -16,5 +16,5 @@ setupLogger(logger)
 
 
 from .api import (  # noqa
-    match, search, get_seller, search_seller,
+    match, search, part, get_seller, search_seller,
     get_category, search_category, get_brand, search_brand)
